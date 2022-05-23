@@ -71,7 +71,7 @@ app.put('/todos/:id', checksExistsUserAccount, (request, response) => {
   const { title, deadline } = request.body;
   const { id } = request.params;
 
-  const todo = user.todos.find(todo => todo.id == id);
+  const todo = user.todos.find(todo => todo.id === id);
 
   todo.title = title;
   todo.deadline = new Date(deadline);
@@ -80,11 +80,25 @@ app.put('/todos/:id', checksExistsUserAccount, (request, response) => {
 });
 
 app.patch('/todos/:id/done', checksExistsUserAccount, (request, response) => {
-  
+  const { user } = request;
+  const { id } = request.params;
+
+  const todo = user.todos.find(todo => todo.id === id)
+
+  todo.done = true;
+
+  return response.status(201).send();
 });
 
 app.delete('/todos/:id', checksExistsUserAccount, (request, response) => {
-  
+  const { user } = request;
+  const { id } = request.params;
+
+  const todo = user.todos.find(todo => todo.id === id);
+
+  user.todos.splice(user.todos.indexOf(todo), 1);
+
+  return response.status(200).send();
 });
 
 module.exports = app;
