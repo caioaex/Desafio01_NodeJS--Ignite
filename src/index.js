@@ -15,7 +15,7 @@ function checksExistsUserAccount(request, response, next) {
   const user = users.find((user) => user.username === username)
 
   if(!user) {
-    return response.status(400).json({ error: "User not found!!" });
+    return response.status(404).json({ error: "User not found!!" });
   }
 
   request.user = user;
@@ -39,7 +39,7 @@ app.post('/users', (request, response) => {
     todos: []
   });
 
-  return response.status(201).send({sucess: "User created"});
+  return response.status(201).send({sucess: "User created!"});
 });
 
 app.get('/todos', checksExistsUserAccount, (request, response) => {
@@ -72,6 +72,10 @@ app.put('/todos/:id', checksExistsUserAccount, (request, response) => {
   const { id } = request.params;
 
   const todo = user.todos.find(todo => todo.id === id);
+
+  if(!todo) {
+    return response.status(404).json({ error: "Todo not found!" });
+  }
 
   todo.title = title;
   todo.deadline = new Date(deadline);
