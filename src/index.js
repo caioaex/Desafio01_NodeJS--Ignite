@@ -12,7 +12,7 @@ const users = [];
 function checksExistsUserAccount(request, response, next) {
   const { username } = request.headers;
 
-  const user = users.find((user) => user.username === username)
+  const user = users.find((user) => user.username === username);
 
   if(!user) {
     return response.status(404).json({ error: "User not found!!" });
@@ -32,14 +32,16 @@ app.post('/users', (request, response) => {
     return response.status(400).json({ error: "User already exists!!" });
   }
 
-  users.push({
+  const user = {
     id: uuidv4(),
     name,
     username,
     todos: []
-  });
+  }
 
-  return response.status(201).send({sucess: "User created!"});
+  users.push(user);
+
+  return response.status(201).json(user);
 });
 
 app.get('/todos', checksExistsUserAccount, (request, response) => {
